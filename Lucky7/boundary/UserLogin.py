@@ -1,4 +1,4 @@
-from flask import render_template, request, Blueprint, session
+from flask import render_template, request, Blueprint, session, redirect, url_for
 from controller.UserLoginController import UserLoginController
 
 # Define a Blueprint for the login functionality
@@ -13,12 +13,25 @@ def login_page():
 
         # Call the LoginController to verify the credentials
         controller = UserLoginController()
-        is_verified, user = controller.verify_account(email, password)
+        is_verified, user_id, profile = controller.verify_account(email, password)
 
         if is_verified:
-            # Store user_id in the session
-            session['id'] = user
-            return render_template('Login.html', message=f'Login successful! Welcome, User ID: {user}.')
+            # Store user_id and profile in the session
+            session['id'] = user_id
+            session['profile'] = profile
+
+            # Redirect based on the profile type
+            if profile == 'admin':
+                return redirect(url_for('admin_app.home_page'))
+            elif profile == 'seller':
+                return redirect(url_for('seller_app.home_page'))
+            elif profile == 'buyer':
+                return redirect(url_for('buyer_app.home_page'))
+            elif profile == 'usedCarAgent':
+                return redirect(url_for('usedCarAgent_app.home_page'))
+            else:
+                return render_template('Login.html', message='Unknown profile type.')
+
         else:
             return render_template('Login.html', message='Invalid email or password.')
 

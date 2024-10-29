@@ -1,12 +1,13 @@
 from entity.UserAccount import UserAccount
 
 class UserLoginController:
-    
+
     def verify_account(self, email, password):
-        # Pass data to the UserAccount entity's verify_account method
+        # Verify account and get the profile from the UserAccount entity
         is_verified, user = UserAccount.verify_account(email, password)
-        
+
         if is_verified and user:
-            return True, user
+            profile = user.profile  # Get the profile type from the UserAccount instance
+            return True, user.id, profile
         else:
-            return False, None
+            return False, None, None

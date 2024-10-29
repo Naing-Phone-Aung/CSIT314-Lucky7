@@ -308,6 +308,22 @@
                       required
                     />
                   </div>
+                  <!-- profile select -->
+                  <div class="relative mb-3">
+                    <label for="profile" class="text-sm text-gray-600">Profile</label>
+                    <select
+                      id="profile"
+                      name="profile"
+                      class="peer py-[9px] px-4 block w-full bg-white border-stone-700 border-[1.5px] rounded-md text-sm focus:bg-white focus:border-stone-900 focus:shadow-sm focus:shadow-stone-900 focus:ring-stone-500 dark:bg-neutral-700 dark:border-transparent dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+                      required
+                    >
+                      <option value="" disabled selected>Select Profile</option>
+                      <option value="seller">Seller</option>
+                      <option value="buyer">Buyer</option>
+                      <option value="usedCarAgent">Used Car Agent</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </div>
                   <!-- terms and conditions -->
                   <div class="mb-3">
                     <input
@@ -328,6 +344,7 @@
                       >.</label
                     >
                   </div>
+
                   <!-- create acc btn -->
                   <div class="mb-3">
                     <button

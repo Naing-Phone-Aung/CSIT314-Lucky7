@@ -12,16 +12,15 @@ def create_account_page():
         confirm_password = request.form["confirm_password"]
         dob = request.form["dob"]
         phone_number = request.form["phone_number"].strip()
+        profile = request.form.get("profile", "buyer")  # Default to 'buyer' if no profile selected
 
         controller = CreateUserAccController()
-        result, messages = controller.create_user_account(name, email, password, confirm_password, dob, phone_number)
+        result, message = controller.create_user_account(name, email, password, confirm_password, dob, phone_number, profile=profile)
 
-        print(f"Result: {result}, Message: {messages}")
+        # if result:
+        #     return redirect(url_for('UserLogin_app.login_page'))
 
-        if result and messages == 'Account created successfully!':
-            return redirect(url_for('UserLogin_app.login_page'))
-        
-        return render_template('CreateUserAccount.html', message=messages)
-    
+        return render_template('CreateUserAccount.html', message=message)
+
+    # Render form without admin check
     return render_template('CreateUserAccount.html')
-
