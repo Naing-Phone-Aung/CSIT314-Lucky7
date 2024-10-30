@@ -34,6 +34,7 @@ def create_listing():
             'name': request.form['name'],
             'image': request.files['image'],
             'model': request.form['model'],
+            'price' : request.form['price'],
             'color': request.form['color'],
             'mileage': request.form['mileage'],
             'steering_type': request.form['steering_type'],

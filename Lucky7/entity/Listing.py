@@ -8,6 +8,7 @@ class Listing(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     image_url = db.Column(db.String(255), nullable=False)  # Store the Imgur link
+    price = db.Column(db.Integer, nullable=False)
     model = db.Column(db.String(50), nullable=False)
     color = db.Column(db.String(30), nullable=False)
     mileage = db.Column(db.Integer, nullable=False)
@@ -28,9 +29,10 @@ class Listing(db.Model):
     agent_id = db.Column(db.Integer, db.ForeignKey('user_account.id'), nullable=False)
     buyer_id = db.Column(db.Integer, db.ForeignKey('user_account.id'), nullable=True)  # Initially empty
 
-    def __init__(self, name, image_url, model, color, mileage, steering_type, steering_position,fuel_type, horsepower, previous_owners, description, seller_id, agent_id):
+    def __init__(self, name, image_url, price, model, color, mileage, steering_type, steering_position,fuel_type, horsepower, previous_owners, description, seller_id, agent_id):
         self.name = name
         self.image_url = image_url
+        self.price = price
         self.model = model
         self.color = color
         self.mileage = mileage

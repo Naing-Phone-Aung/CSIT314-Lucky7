@@ -30,6 +30,14 @@ class CarListingController:
         if not form_data.get('image'):
             errors.append("Image is required.")
 
+        # Validate mileage
+        try:
+            price = int(form_data['price'])
+            if price < 0 :
+                errors.append("Price must be a positive integer.")
+        except ValueError:
+            errors.append("Price must be a valid integer.")
+
         # Validate model
         if not form_data['model'] or len(form_data['model']) > 50:
             errors.append("Model must be 50 characters or fewer.")
@@ -96,6 +104,7 @@ class CarListingController:
             name=form_data['name'],
             image_url=image_url,
             model=form_data['model'],
+            price=form_data['price'],
             color=form_data['color'],
             mileage=mileage,
             steering_type=form_data['steering_type'],
@@ -116,6 +125,7 @@ class CarListingController:
         listings = db.session.query(
             Listing.id,
             Listing.name,
+            Listing.price,
             Listing.model,
             Listing.image_url,
             Listing.created_at,

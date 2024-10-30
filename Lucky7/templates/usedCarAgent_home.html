@@ -32,6 +32,7 @@
                             <div>
                                 <h4 class="text-lg font-bold text-stone-900">{{ listing.name }}</h4>
                                 <p><span class="font-semibold">Model:</span> {{ listing.model }}</p>
+                                <p><span class="font-semibold">Price:</span> {{ listing.price }}</p>
                                 <p><span class="font-semibold">Seller:</span> {{ listing.seller_name }}</p>
                                 <p><span class="font-semibold">Created At:</span> {{ listing.created_at.strftime('%Y-%m-%d') }}</p>
                                 <a href="/usedCarAgent/viewListing/{{ listing.id }}" class="mt-2 inline-block text-stone-900 hover:text-stone-700">View Details</a>
