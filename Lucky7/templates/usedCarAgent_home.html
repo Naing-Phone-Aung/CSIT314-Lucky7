@@ -28,7 +28,7 @@
                 <div class="space-y-4">
                     {% for listing in listings %}
                         <div class="flex items-center border border-gray-300 rounded-lg p-4 bg-white shadow-md">
-                            <img src="{{ listing.image_url }}" referrerpolicy="no-referrer" alt="{{ listing.name }} Image" class="w-24 h-24 object-cover rounded-md mr-4">
+                            <img src="{{ listing.image_url }}" referrerpolicy="no-referrer" alt="{{ listing.name }} Image" class="w-24 h-24 pr-5 object-cover rounded-md mr-4">
                             <div>
                                 <h4 class="text-lg font-bold text-stone-900">{{ listing.name }}</h4>
                                 <p><span class="font-semibold">Model:</span> {{ listing.model }}</p>
