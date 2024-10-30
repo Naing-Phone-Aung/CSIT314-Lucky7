@@ -7,6 +7,7 @@ from entity.UserAccount import UserAccount
 app = Flask(__name__)
 app.secret_key = "LinPyae"
 
+
 # App configuration settings (including database URI)
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://admin:linpyaehmoo@lucky7.cfi6uo08gsoq.ap-southeast-2.rds.amazonaws.com/Lucky7"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -39,6 +40,7 @@ app.register_blueprint(seller_app)
 
 from boundary.usedCarAgent import usedCarAgent_app
 app.register_blueprint(usedCarAgent_app)
+
 
 # Redirect root URL to /login
 @app.route('/')

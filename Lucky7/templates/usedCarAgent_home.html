@@ -1,4 +1,3 @@
-<!-- templates/usedCarAgent_home.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,6 +10,7 @@
     <header class="bg-stone-900 text-white py-4">
         <h1 class="text-center text-xl font-bold">Used Car Agent Dashboard</h1>
     </header>
+    <button onclick="window.location.href='/Logout'">Logout</button>
 
     <section class="container mx-auto mt-8">
         <div class="bg-white shadow-md rounded-lg p-6">
@@ -18,12 +18,30 @@
             <p class="text-gray-700 mb-6">
                 Manage car listings, view client requests, and track your activities.
             </p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <a href="/addListing" class="block p-4 bg-stone-900 text-white text-center rounded-md hover:bg-stone-800">Add New Listing</a>
-                <a href="/viewListings" class="block p-4 bg-stone-900 text-white text-center rounded-md hover:bg-stone-800">View All Listings</a>
-                <a href="/clientRequests" class="block p-4 bg-stone-900 text-white text-center rounded-md hover:bg-stone-800">View Client Requests</a>
-                <a href="/activityLog" class="block p-4 bg-stone-900 text-white text-center rounded-md hover:bg-stone-800">Activity Log</a>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+                <a href="/usedCarAgent/create_listing" class="block p-4 bg-stone-900 text-white text-center rounded-md hover:bg-stone-800">Add New Listing</a>
             </div>
+
+            <!-- Listings Section -->
+            <h3 class="text-xl font-semibold text-stone-900 mb-4">Your Car Listings</h3>
+            {% if listings %}
+                <div class="space-y-4">
+                    {% for listing in listings %}
+                        <div class="flex items-center border border-gray-300 rounded-lg p-4 bg-white shadow-md">
+                            <img src="{{ listing.image_url }}" referrerpolicy="no-referrer" alt="{{ listing.name }} Image" class="w-24 h-24 object-cover rounded-md mr-4">
+                            <div>
+                                <h4 class="text-lg font-bold text-stone-900">{{ listing.name }}</h4>
+                                <p><span class="font-semibold">Model:</span> {{ listing.model }}</p>
+                                <p><span class="font-semibold">Seller:</span> {{ listing.seller_name }}</p>
+                                <p><span class="font-semibold">Created At:</span> {{ listing.created_at.strftime('%Y-%m-%d') }}</p>
+                                <a href="/usedCarAgent/viewListing/{{ listing.id }}" class="mt-2 inline-block text-stone-900 hover:text-stone-700">View Details</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-gray-700">No listings found. Start by creating a new listing!</p>
+            {% endif %}
         </div>
     </section>
 </body>
