@@ -1,30 +1,47 @@
-<!-- templates/seller_home.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seller Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
+    <title>Seller Home - Agents</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@^2.0/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="font-sora bg-gray-100 h-screen">
-    <header class="bg-stone-900 text-white py-4">
-        <h1 class="text-center text-xl font-bold">Seller Dashboard</h1>
+<body class="bg-gray-100">
+    <header class="bg-blue-600 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Seller Dashboard</h1>
+            <nav>
+                <ul class="flex space-x-4">
+                    <li><a href="#agent" class="hover:underline">Agent</a></li>
+                    <li><a href="#listing" class="hover:underline">Listing</a></li>
+                </ul>
+            </nav>
+            <button onclick="window.location.href='/Logout'" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Logout</button>
+        </div>
     </header>
 
-    <section class="container mx-auto mt-8">
-        <div class="bg-white shadow-md rounded-lg p-6">
-            <h2 class="text-2xl font-semibold text-stone-900 mb-4">Welcome, Seller!</h2>
-            <p class="text-gray-700 mb-6">
-                Manage your listings, view inquiries, and track sales.
-            </p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <a href="/addListing" class="block p-4 bg-stone-900 text-white text-center rounded-md hover:bg-stone-800">Add New Listing</a>
-                <a href="/viewListings" class="block p-4 bg-stone-900 text-white text-center rounded-md hover:bg-stone-800">View My Listings</a>
-                <a href="/inquiries" class="block p-4 bg-stone-900 text-white text-center rounded-md hover:bg-stone-800">View Inquiries</a>
-                <a href="/sales" class="block p-4 bg-stone-900 text-white text-center rounded-md hover:bg-stone-800">Track Sales</a>
+    <main class="container mx-auto mt-6">
+        <!-- Agent Category -->
+        <section id="agent" class="bg-white p-6 rounded shadow-md">
+            <h2 class="text-xl font-semibold mb-4">Agents</h2>
+            <div class="space-y-4">
+                <!-- Dynamically generated agent list -->
+                {% for agent in agents %}
+                <div class="bg-gray-50 p-4 rounded shadow-md flex justify-between items-center">
+                    <div>
+                        <h3 class="text-lg font-bold">{{ agent.name }}</h3>
+                        <p>Email: {{ agent.email }}</p>
+                        <p>Phone: {{ agent.phone_number }}</p>
+                        <p>Average Rating: {% if agent.average_rating %}{{ agent.average_rating }}/5{% else %}No ratings yet{% endif %}</p>
+                        <div class="mt-2">
+                        </div>
+                    </div>
+                    <a href="/seller/view_agent/{{ agent.id }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">See More</a>
+                </div>
+                {% endfor %}
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
+
 </body>
 </html>

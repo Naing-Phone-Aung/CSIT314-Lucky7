@@ -14,6 +14,8 @@ class UserAccount(db.Model):
     dob = db.Column(db.Date, nullable=False)
     phone_number = db.Column(db.String(15), unique=True, nullable=False)
     profile = db.Column(Enum('admin', 'seller', 'buyer', 'usedCarAgent', name='profile_type'), nullable=False)
+    #created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
 
     def __init__(self, name, email, password, dob, phone_number, profile='buyer'):
         self.name = name

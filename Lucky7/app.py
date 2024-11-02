@@ -1,7 +1,7 @@
 from flask import Flask, redirect, url_for
 from flask_migrate import Migrate  # Import Flask-Migrate
 from db import db
-from entity.UserAccount import UserAccount
+
 
 # Flask app initialization
 app = Flask(__name__)
