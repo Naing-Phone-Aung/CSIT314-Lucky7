@@ -1,0 +1,22 @@
+<div class="col-span-1">
+  <div class="relative flex flex-col hover:shadow-md z-30 bg-white border shadow-sm rounded-md overflow-hidden">
+      <div class="relative">
+          <img class="w-full object-cover" style="height: 10rem;" src="{{ listing.image_url }}" referrerpolicy="no-referrer" alt="{{ listing.name }} Image">
+      </div>
+      <div class="pt-4 md:p-5 text-sm">
+          <div class="text-lg"> {{ listing.name }}</div>
+          <div class="mt-2 mb-4">
+              <div class="mb-2"><span class="text-lava">Mileage:</span> <span class="text-moon">{{ listing.mileage }} km</span></div>
+              <div class="mb-2"><span class="text-lava">No. of Owners:</span> <span class="text-moon">{{ listing.previous_owners }}</span></div>
+              <div class="mb-2"><span class="text-lava">Posted At:</span> <span class="text-moon">{{ listing.created_at.strftime('%d-%m-%Y') }}</span></div>
+          </div>
+          <hr />
+          <div class="flex justify-between items-baseline mt-2">
+              <p class="text-lg text-moon dark:text-white">S$ {{ listing.price }}</p>
+              <div class="flex items-center">
+                  <a href="{{ url_for('usedCarAgent_app.view_listing', listing_id=listing.id) }}" class="inline-flex justify-center items-center gap-x-2 text-sm font-medium text-azure hover:underline disabled:pointer-events-none">See Details</a>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

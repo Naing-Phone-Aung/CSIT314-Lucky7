@@ -1,29 +1,26 @@
 /** @type {import('tailwindcss').Config} */
 
-const colors = require('tailwindcss/colors')
+const colors = require("tailwindcss/colors");
 
 module.exports = {
-  content: [
-    "./templates/*",
-    "./node_modules/preline/dist/*.js",
-    "./node_modules/flowbite/dist/*.js"
-  ],
+	content: [
+		"./templates/**/*.html",
+		"./node_modules/flowbite/**/*.js",
+		"node_modules/preline/dist/*.js",
+		"./node_modules/tailwindcss/",
+	],
 
-  darkMode: "class",
+	darkMode: "class",
 
-  theme: {
-    colors: {
-      ...colors,
-    },
-    extend: {},
-    fontFamily: {
-      sora: "Sora",
-    },
-  },
+	theme: {
+		colors: {
+			...colors,
+		},
+		extend: {},
+		fontFamily: {
+			sora: "Sora",
+		},
+	},
 
-  plugins: [
-    require("flowbite/plugin"),
-    require("preline/plugin")
-  ],
-}
-
+	plugins: [require("flowbite/plugin"), require("preline/plugin")],
+};
