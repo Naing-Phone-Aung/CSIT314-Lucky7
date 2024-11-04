@@ -1,0 +1,48 @@
+<nav
+      class="bg-white z-40 flex justify-between gap-x-6 py-3 items-center fixed w-10/12 left-1/2 -translate-x-1/2 border-b-2 border-gray-50"
+    >
+      <div>
+        <a
+          class="inline-flex text-lg items-center gap-x-2 whitespace-nowrap text-moon hover:text-blue-70 focus:outline-none focus:text-azure"
+          href="{{ url_for('seller_app.home_page') }}"
+        >
+          LuckySeven
+        </a>
+      </div>
+      <div class="flex gap-28">
+        <a
+          class="inline-flex items-center font-semibold gap-x-2 text-sm whitespace-nowrap text-azure hover:text-blue-70 focus:outline-none focus:text-azure"
+          href="{{ url_for('seller_app.home_page') }}"
+        >
+          Agents
+        </a>
+        <a
+          class="inline-flex items-center font-semibold gap-x-2 text-sm whitespace-nowrap text-moon hover:text-blue-70 focus:outline-none focus:text-azure dark:text-lava dark:focus:text-blue-400"
+          href="{{ url_for('seller_app.view_my_listings') }}"
+        >
+          Listings
+        </a>
+        <a
+          class="flex justify-between items-center gap-2 hover:shadow-gray-400 hover:shadow bg-azure rounded-md px-4 py-2"
+          href="{{ url_for('seller_app.view_profile') }}"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="size-5 text-milk"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <p
+            class="inline-flex items-center gap-x-2 text-milk font-semibold text-sm whitespace-nowrap focus:outline-none pointer-events-none dark:text-azure dark:focus:text-blue-400"
+          >
+            {{ name }}
+          </p>
+        </a>
+      </div>
+    </nav>

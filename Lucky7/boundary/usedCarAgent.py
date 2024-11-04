@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, abort
 from controller.CarListingController import CarListingController
+from controller.AgentController import AgentController
 from flask import jsonify
 
 
@@ -18,7 +19,7 @@ def home_page():
     # Fetch listings created by the agent
     listings = controller.get_listings_by_agent(agent_id)
 
-    return render_template('agent_home.html', listings=listings, name = listings[1])
+    return render_template('/usedCarAgent/agent_home.html', listings=listings, name = listings[1].agent_name)
 
 
 @usedCarAgent_app.route('/usedCarAgent/create_listing', methods=['GET', 'POST'])
@@ -63,7 +64,7 @@ def create_listing():
                 flash(error, "error")
 
     listings = controller.get_listings_by_agent(agent_id)
-    return render_template('agent_home.html', listings=listings, name = listings[1])
+    return render_template('/usedCarAgent/agent_home.html', listings=listings, name = listings[1])
 
 
 @usedCarAgent_app.route('/usedCarAgent/viewListing/<int:listing_id>')
@@ -78,7 +79,7 @@ def view_listing(listing_id):
 
     if result:
         listing, seller_name, seller_email, agent_name = result  # Unpack the Listing object and seller_name
-        return render_template('view_listing.html', listing=listing, seller_name=seller_name, seller_email=seller_email, agent_name=agent_name)
+        return render_template('/usedCarAgent/view_listing.html', listing=listing, seller_name=seller_name, seller_email=seller_email, name=agent_name)
     else:
         abort(404)  # Show a 404 error if the listing is not found
 
@@ -126,6 +127,11 @@ def update_listing(listing_id):
 
 @usedCarAgent_app.route('/usedCarAgent/search')
 def search_listings():
+    # Check if the user is logged in and has the required profile
+    if 'profile' not in session or session['profile'] not in ['usedCarAgent', 'Admin']:
+        flash("You do not have permission to access this page.", "error")
+        return redirect(url_for('UserLogin_app.login_page'))
+
     search_query = request.args.get('search', '').strip()
     controller = CarListingController()
     agent_id = session.get('id')  # Assuming agent ID is stored in session after login
@@ -148,4 +154,26 @@ def search_listings():
 
 @usedCarAgent_app.route('/usedCarAgent/reviews')
 def view_reviews():
-    return render_template('view-agent-reviews.html')
+    # Check if the user is logged in and has the required profile
+    if 'profile' not in session or session['profile'] not in ['usedCarAgent', 'Admin']:
+        flash("You do not have permission to access this page.", "error")
+        return redirect(url_for('UserLogin_app.login_page'))
+
+    controller = AgentController()
+    agent_id = session.get('id')
+    reviews = controller.get_review_to_agent(agent_id)
+    name = reviews[1].agent_name
+
+    return render_template('/usedCarAgent/view-agent-reviews.html', reviews=reviews, name=name)
+
+@usedCarAgent_app.route('/usedCarAgent/profile')
+def view_profile():
+    # Check if the user is logged in and has the required profile
+    if 'profile' not in session or session['profile'] not in ['usedCarAgent', 'Admin']:
+        flash("You do not have permission to access this page.", "error")
+        return redirect(url_for('UserLogin_app.login_page'))
+
+    controller = AgentController()
+    agent_detail = controller.get_agent_detail(session.get('id'))
+    name= agent_detail[0].name
+    return render_template('/usedCarAgent/agent_profile.html', agent_detail=agent_detail[0], name=name)

@@ -1,0 +1,50 @@
+<!-- right -->
+<div id="give-review-section" class="mt-6 p-8 bg-gray-100 rounded-md">
+  <form method="post" action="{{ url_for('seller_app.view_agent', agent_id=agent.id) }}">
+    <!-- Star Rating -->
+    <div class="flex items-start gap-3">
+      <p class="text-base mb-4 flex font-normal text-lava">Rate Agent :</p>
+      <div class="flex items-center gap-2 text-yellow-300 text-sm text-right">
+        <label>
+          <input type="radio" name="star_rating" value="1" class="hidden" required />
+          <svg class="star size-6 cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" d="M12 2.25c-.448 0-.848.309-.982.742L8.94 8.038l-6.002.469a1.063 1.063 0 0 0-.588 1.83l4.59 3.925-1.396 6.144a1.063 1.063 0 0 0 1.549 1.125L12 18.54l5.907 3.99a1.063 1.063 0 0 0 1.549-1.125l-1.396-6.144 4.59-3.925a1.063 1.063 0 0 0-.588-1.83l-6.002-.469L12.982 2.992A1.063 1.063 0 0 0 12 2.25z" clip-rule="evenodd"/>
+          </svg>
+        </label>
+        <label>
+          <input type="radio" name="star_rating" value="2" class="hidden" />
+          <svg class="star size-6 cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" d="M12 2.25c-.448 0-.848.309-.982.742L8.94 8.038l-6.002.469a1.063 1.063 0 0 0-.588 1.83l4.59 3.925-1.396 6.144a1.063 1.063 0 0 0 1.549 1.125L12 18.54l5.907 3.99a1.063 1.063 0 0 0 1.549-1.125l-1.396-6.144 4.59-3.925a1.063 1.063 0 0 0-.588-1.83l-6.002-.469L12.982 2.992A1.063 1.063 0 0 0 12 2.25z" clip-rule="evenodd"/>
+          </svg>
+        </label>
+        <label>
+          <input type="radio" name="star_rating" value="3" class="hidden" />
+          <svg class="star size-6 cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" d="M12 2.25c-.448 0-.848.309-.982.742L8.94 8.038l-6.002.469a1.063 1.063 0 0 0-.588 1.83l4.59 3.925-1.396 6.144a1.063 1.063 0 0 0 1.549 1.125L12 18.54l5.907 3.99a1.063 1.063 0 0 0 1.549-1.125l-1.396-6.144 4.59-3.925a1.063 1.063 0 0 0-.588-1.83l-6.002-.469L12.982 2.992A1.063 1.063 0 0 0 12 2.25z" clip-rule="evenodd"/>
+          </svg>
+        </label>
+        <label>
+          <input type="radio" name="star_rating" value="4" class="hidden" />
+          <svg class="star size-6 cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" d="M12 2.25c-.448 0-.848.309-.982.742L8.94 8.038l-6.002.469a1.063 1.063 0 0 0-.588 1.83l4.59 3.925-1.396 6.144a1.063 1.063 0 0 0 1.549 1.125L12 18.54l5.907 3.99a1.063 1.063 0 0 0 1.549-1.125l-1.396-6.144 4.59-3.925a1.063 1.063 0 0 0-.588-1.83l-6.002-.469L12.982 2.992A1.063 1.063 0 0 0 12 2.25z" clip-rule="evenodd"/>
+          </svg>
+        </label>
+        <label>
+          <input type="radio" name="star_rating" value="5" class="hidden" />
+          <svg class="star size-6 cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" d="M12 2.25c-.448 0-.848.309-.982.742L8.94 8.038l-6.002.469a1.063 1.063 0 0 0-.588 1.83l4.59 3.925-1.396 6.144a1.063 1.063 0 0 0 1.549 1.125L12 18.54l5.907 3.99a1.063 1.063 0 0 0 1.549-1.125l-1.396-6.144 4.59-3.925a1.063 1.063 0 0 0-.588-1.83l-6.002-.469L12.982 2.992A1.063 1.063 0 0 0 12 2.25z" clip-rule="evenodd"/>
+          </svg>
+        </label>
+      </div>
+    </div>
+
+    <!-- Review Text Area -->
+    <label for="review-text" class="text-sm font-normal text-lava">Write your review :</label>
+    <textarea name="description" id="review-text" rows="4" class="w-full text-moon text-md mt-3 p-3 border focus:ring-lava focus:border-lava border-gray-300 rounded-sm" required></textarea>
+
+    <!-- Submit Button -->
+    <div class="flex justify-end mt-2">
+      <button type="submit" class="bg-gray-500 px-4 py-2 bg-azure text-white rounded-md hover:shadow-sm hover:bg-gray-700">Submit</button>
+    </div>
+  </form>
+</div>

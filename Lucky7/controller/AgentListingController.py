@@ -1,9 +1,10 @@
 from entity.Review import Review
 from entity.UserAccount import UserAccount
 from db import db
+from sqlalchemy.orm import aliased
 
 class AgentListingController:
-    
+
     def get_all_agents_with_reviews(self):
         # Query all agents from the UserAccount table where profile is 'usedCarAgent'
         agents = UserAccount.query.filter_by(profile='usedCarAgent').all()
@@ -44,7 +45,7 @@ class AgentListingController:
             agent_list.append(agent_details)
 
         return agent_list
-    
+
 
     def get_reviews_by_agent(self, agent_id, filter_by='all'):
         # Get agent details
@@ -52,21 +53,31 @@ class AgentListingController:
         if not agent:
             return [], None
 
-        # Query all reviews related to this agent
-        if filter_by == 'seller':
-            reviews = Review.query.filter_by(agent_id=agent_id).filter(Review.seller_id.isnot(None)).all()
-        elif filter_by == 'buyer':
-            reviews = Review.query.filter_by(agent_id=agent_id).filter(Review.buyer_id.isnot(None)).all()
-        else:
-            reviews = Review.query.filter_by(agent_id=agent_id).all()
+        # Create an alias for UserAccount to represent the seller
+        seller_alias = aliased(UserAccount)
 
-        # Create a list of reviews with relevant details
+        # Base query for reviews
+        query = Review.query \
+            .outerjoin(seller_alias, Review.seller_id == seller_alias.id) \
+            .filter(Review.agent_id == agent_id)
+
+        # Apply filters for 'seller' or 'buyer' reviews
+        if filter_by == 'seller':
+            query = query.filter(Review.seller_id.isnot(None))
+        elif filter_by == 'buyer':
+            query = query.filter(Review.buyer_id.isnot(None))
+
+        # Execute the query and fetch all reviews
+        reviews = query.all()
+
+        # Create a list of reviews with relevant details, including the seller's name if available
         review_list = [
             {
                 'star_rating': review.star_rating,
                 'description': review.description,
                 'created_at': review.created_at,
-                'reviewer_type': 'seller' if review.seller_id else 'buyer'
+                'reviewer_type': 'seller' if review.seller_id else 'buyer',
+                'seller_name': review.seller_id and seller_alias.query.get(review.seller_id).name if review.seller_id else None
             }
             for review in reviews
         ]
@@ -79,7 +90,7 @@ class AgentListingController:
         }
 
         return review_list, agent_details
-    
+
     def give_review(self, agent_id, user_id, star_rating, description, user_profile):
         # Validate star rating is in range 1 to 5
         if star_rating < 1 or star_rating > 5:
