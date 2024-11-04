@@ -11,15 +11,18 @@ module.exports = {
 	],
 
 	darkMode: "class",
-
 	theme: {
-		colors: {
-			...colors,
-		},
-		extend: {},
-		fontFamily: {
-			sora: "Sora",
-		},
+	  colors: {
+		azure: "#1463F3",
+		milk: "#FAF9F6",
+		lava: "#605E5D",
+		moon: "#1C1917",
+		...colors,
+	  },
+	  extend: {},
+	  fontFamily: {
+		sora: ["Sora", "sans-serif"],
+	  },
 	},
 
 	plugins: [require("flowbite/plugin"), require("preline/plugin")],
