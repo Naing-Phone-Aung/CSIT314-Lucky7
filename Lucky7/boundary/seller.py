@@ -1,24 +1,33 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, abort
-from controller.AgentListingController import AgentListingController
+from controller.AgentListingController import SellerGiveReview, SellerViewReview
 from controller.SellerController import SellerController
 
-seller_app = Blueprint('seller_app', __name__)
 
-# Create an instance of AgentListingController
-agent_controller = AgentListingController()
+seller_app = Blueprint('seller_app', __name__)
+GiveReview = SellerGiveReview()
+ViewReview = SellerViewReview()
+
 
 @seller_app.route('/seller')
 def home_page():
+    # Check if the user has the correct profile to access this page
     if 'profile' not in session or session['profile'] not in ['seller', 'Admin']:
         flash("You do not have permission to access this page.")
         return redirect(url_for('UserLogin_app.login_page'))
 
-    # Get all agents along with their reviews
-    agents = agent_controller.get_all_agents_with_reviews()
+    agents = ViewReview.get_all_agents_with_reviews()
+
     seller_controller = SellerController()
-    name = seller_controller.get_seller_details(session.get('id'))[0].name
+    seller = seller_controller.get_seller_details(session.get('id'))
+
+    if seller:
+        name = seller.name 
+    else:
+        flash("Seller details not found.")
+        return redirect(url_for('UserLogin_app.login_page'))
 
     return render_template('/seller/seller_home.html', agents=agents, name=name)
+
 
 @seller_app.route('/seller/profile')
 def view_profile():
@@ -26,10 +35,20 @@ def view_profile():
         flash("You do not have permission to access this page.")
         return redirect(url_for('UserLogin_app.login_page'))
 
-    controller = SellerController()
-    seller_detail = controller.get_seller_details(session.get('id'))
-    name= seller_detail[0].name
-    return render_template('/seller/seller_profile.html', seller_detail=seller_detail[0], name=name)
+    # Get seller details
+    seller_controller = SellerController()
+    seller_detail = seller_controller.get_seller_details(session.get('id'))
+
+    # Check if seller details were retrieved successfully
+    if seller_detail:
+        name = seller_detail.name 
+    else:
+        flash("Seller details not found.")
+        return redirect(url_for('seller_app.home_page'))
+
+    # Render profile page with seller details
+    return render_template('/seller/seller_profile.html', seller_detail=seller_detail, name=name)
+
 
 @seller_app.route('/seller/view_agent/<int:agent_id>', methods=['GET', 'POST'])
 def view_agent(agent_id):
@@ -48,7 +67,7 @@ def view_agent(agent_id):
             star_rating = int(request.form.get('star_rating'))
             description = request.form.get('description')
             try:
-                agent_controller.give_review(agent_id, user_id, star_rating, description, 'seller')
+                GiveReview.give_review(agent_id, user_id, star_rating, description, 'seller')
                 flash("Review submitted successfully.", "success")
             except ValueError as e:
                 flash(str(e))
@@ -59,7 +78,7 @@ def view_agent(agent_id):
     # Get filter type from request (default to 'all')
     filter_by = request.args.get('filter_by', 'all')
     # Get reviews for the specified agent, filtered by 'seller', 'buyer', or 'all'
-    reviews, agent = agent_controller.get_reviews_by_agent(agent_id, filter_by=filter_by)
+    reviews, agent = ViewReview.get_reviews_by_agent(agent_id, filter_by=filter_by)
 
     if agent is None:
         flash("Agent not found.")
@@ -74,21 +93,25 @@ def view_agent(agent_id):
 
     controller = SellerController()
     seller_detail = controller.get_seller_details(session.get('id'))
-    name= seller_detail[0].name
+    name= seller_detail.name
 
     return render_template('/seller/view_agent.html', agent=agent, reviews=reviews, filter_by=filter_by, average_rating=average_rating, name=name)
 
+
 @seller_app.route('/seller/mylistings')
 def view_my_listings():
+    # Check if the user has the correct profile to access this page
     if 'profile' not in session or session['profile'] not in ['seller', 'Admin']:
         flash("You do not have permission to access this page.")
         return redirect(url_for('UserLogin_app.login_page'))
 
+    # Get the listings for the seller
     seller_controller = SellerController()
     listings = seller_controller.get_seller_listings(session.get('id'))
+    seller_detail = seller_controller.get_seller_details(session.get('id'))
+    name= seller_detail.name
 
-    name= listings[0].seller_name
-    print (name)
-
-
+    # Pass the listings to the template
     return render_template('/seller/seller_listings.html', listings=listings, name=name)
+
+

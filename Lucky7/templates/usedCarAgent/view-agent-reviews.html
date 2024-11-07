@@ -44,80 +44,115 @@
           </li>
         </ol>
       </div>
+
       <section>
         <div class="grid grid-cols-3 gap-10">
-
           <!-- right -->
           <div class="col-span-3">
-            <div
-              class="grid items-center gap-4 mb-4 border-b-[0.5px] pb-3 border-lava"
-            >
-              <a
-                href="#"
-                class="nav-link text-lava hover:text-lava cursor-pointer text-center"
-                >My Reviews</a
-              >
+            <div class="grid items-center gap-4 mb-4 border-b-[0.5px] pb-3 border-lava text-center">
+              My Reviews
             </div>
-              <!-- All Reviews Section -->
-              {% for review in reviews %}
-              <div
-                id="all-reviews-section"
-                class="mt-4 p-7 bg-gray-100 rounded-md"
-              >
-                <div class="flex items-start justify-start mb-2 gap-3">
-                  <div class="rounded-sm">
+
+            <!-- Review Filter Options (Under My Reviews) -->
+            <div id="reviews-section" class="mt-2 mb-6">
+              <form method="get" action="">
+                <div class="flex justify-start items-center gap-2">
+                  <button
+                    type="submit"
+                    name="filter_by"
+                    value="all"
+                    id="all-reviews"
+                    class="text-white rounded-md px-2 py-1 hover:bg-blue-600
+                    {% if filter_by == 'all' or not filter_by %} bg-azure {% else %} bg-gray-400 {% endif %}"
+                  >
+                    All Reviews
+                  </button>
+                  <button
+                    type="submit"
+                    name="filter_by"
+                    value="buyer"
+                    id="buyer-reviews"
+                    class="text-white rounded-md px-2 py-1 hover:bg-blue-600
+                    {% if filter_by == 'buyer' %} bg-azure {% else %} bg-gray-400 {% endif %}"
+                  >
+                    Buyer Reviews
+                  </button>
+                  <button
+                    type="submit"
+                    name="filter_by"
+                    value="seller"
+                    id="seller-reviews"
+                    class="text-white rounded-md px-2 py-1 hover:bg-blue-600
+                    {% if filter_by == 'seller' %} bg-azure {% else %} bg-gray-400 {% endif %}"
+                  >
+                    Seller Reviews
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Render Reviews Based on Filter -->
+            {% if reviews %}
+            {% for review in reviews %}
+            <div
+              id="all-reviews-section"
+              class="mt-4 p-7 bg-gray-100 rounded-md"
+            >
+              <div class="flex items-start justify-start mb-2 gap-3">
+                <div class="rounded-sm">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    class="size-6 text-azure"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-azure font-medium mb-2">{{review.reviewer_name}}</p>
+                  <div
+                    class="flex items-center gap-2 text-yellow-300 text-sm mb-2 text-right"
+                  >
+                    {% for i in range(review.star_rating) %}
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
                       fill="currentColor"
-                      class="size-6 text-azure"
+                      class="size-4"
                     >
                       <path
                         fill-rule="evenodd"
-                        d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+                        d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
                         clip-rule="evenodd"
                       />
                     </svg>
-                  </div>
-                  <div>
-                    <p class="text-azure font-medium mb-2">{{review.seller_name}}</p>
-                    <div
-                      class="flex items-center gap-2 text-yellow-300 text-sm mb-2 text-right"
-                    >
-                    {% for i in range(review.star_rating) %}
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        class="size-4"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
                     {% endfor %}
-                    </div>
-                    <p class="my-4 text-sm font-light text-moon">
-                    {{review.description}}
-                    </p>
-                    <p class="font-light text-lava text-xs">{{ review.created_at.strftime('%d-%m-%Y') }}</p>
                   </div>
+                  <p class="my-4 text-sm font-light text-moon">
+                    {{review.description}}
+                  </p>
+                  <p class="font-light text-lava text-xs">{{ review.created_at.strftime('%d-%m-%Y') }}</p>
                 </div>
               </div>
-              {% endfor %}
-
-
-
-
-
             </div>
+            {% endfor %}
+            {% else %}
+            <div class="text-center text-lava font-light text-lg mt-4">
+              No reviews found
+            </div>
+            {% endif %}
+
           </div>
         </div>
       </section>
       <footer class=""></footer>
     </main>
+
     <script src="./node_modules/preline/dist/preline.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
   </body>

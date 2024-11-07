@@ -63,3 +63,29 @@ class UserAccount(db.Model):
         if user and user.verify_password(password):
             return True, user
         return False, None
+    
+    ########################### SellerController.py ###########################
+    @staticmethod
+    def get_seller_details(seller_id):
+        return db.session.query(UserAccount).filter(UserAccount.id == seller_id).first()
+
+
+    ########################### AgentListingController.py ###########################
+    @staticmethod
+    def get_all_agents():
+        # Retrieve all agents with the profile 'usedCarAgent'
+        return db.session.query(UserAccount).filter_by(profile='usedCarAgent').all()
+
+    ########################### AgentController ###########################
+    @staticmethod
+    def get_agent_details(agent_id):
+        # Retrieve details for a specific agent by ID
+        return db.session.query(UserAccount).filter_by(id=agent_id, profile='usedCarAgent').first()
+
+
+    ########################### CarListingController ###########################
+    @staticmethod
+    def validate_seller_email(email):
+        # Check if a seller exists by email and return the seller's ID
+        seller = db.session.query(UserAccount).filter_by(email=email, profile='seller').first()
+        return seller.id if seller else None

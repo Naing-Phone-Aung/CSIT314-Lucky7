@@ -1,5 +1,5 @@
 from flask import Flask, redirect, url_for
-from flask_migrate import Migrate  # Import Flask-Migrate
+from flask_migrate import Migrate  
 from db import db
 
 
