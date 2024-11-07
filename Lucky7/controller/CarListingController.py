@@ -2,7 +2,7 @@ from entity.Listing import Listing
 from entity.UserAccount import UserAccount
 
 #19 Agent Create Listing
-class AgentCreatListing:
+class AgentCreateListing:
     def create_listing(self, form_data, agent_id):
         seller_id = UserAccount.validate_seller_email(form_data['seller_email'])
         if not seller_id:

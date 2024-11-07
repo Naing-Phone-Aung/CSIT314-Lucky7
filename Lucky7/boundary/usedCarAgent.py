@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, abort
-from controller.CarListingController import AgentCreatListing, AgentUpdateListing, AgentDeleteListing, AgentSearchListing, AgentViewListing
+from controller.CarListingController import AgentCreateListing, AgentUpdateListing, AgentDeleteListing, AgentSearchListing, AgentViewListing
 from controller.AgentController import AgentController, AgentViewReview
 from flask import jsonify
 
@@ -37,7 +37,7 @@ def create_listing():
         flash("You do not have permission to access this page.", "error")
         return redirect(url_for('UserLogin_app.login_page'))
 
-    CreateController = AgentCreatListing()
+    CreateController = AgentCreateListing()
     ListingController = AgentSearchListing()
     if request.method == 'POST':
         form_data = {
