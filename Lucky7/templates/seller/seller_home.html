@@ -78,9 +78,11 @@
             <div>
               <div class="flex items-center text-yellow-500 text-sm my-3">
                 <span class="flex space-x-1">
+                  {% if agent.average_rating is not none %}
                   {% for i in range(agent.average_rating | round | int) %}
                   <span>★</span>
                   {% endfor %}
+                  {% endif %}
                 </span>
                 <span class="text-lava ml-4">|</span>
                 <span class="text-lava ml-4">{{ agent.reviews | length }} Reviews</span>

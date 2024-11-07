@@ -14,7 +14,7 @@ def home_page():
         return redirect(url_for('UserLogin_app.login_page'))
 
     controller = AgentSearchListing()
-    agent_id = session.get('id') 
+    agent_id = session.get('id')
     # Fetch listings created by the agent
     listings = controller.get_listings_by_agent(agent_id)
     

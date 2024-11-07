@@ -20,11 +20,12 @@ class AgentDeleteListing:
         return Listing.remove_listing(listing_id)
 
 #23 Agent Search Listing
+#208 Agent View Listings
 class AgentSearchListing:
     def get_listings_by_agent(self, agent_id, search_query=None):
         return Listing.get_listings_by_agent(agent_id, search_query)
 
-#20 Agent View Listing
+#20 Agent View Detail of Listing
 class AgentViewListing:
     def get_listing_details(self, listing_id):
         return Listing.get_listing_details(listing_id)

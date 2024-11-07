@@ -170,7 +170,7 @@ class Listing(db.Model):
     @classmethod
     def get_listings_by_agent(cls, agent_id, search_query=None):
         # Retrieve listings created by a specific agent with optional search filtering
-        query = db.session.query(
+        listing = db.session.query(
             cls.id,
             cls.name,
             cls.mileage,
@@ -185,9 +185,9 @@ class Listing(db.Model):
 
         # Apply search query if provided
         if search_query:
-            query = query.filter(cls.name.ilike(f"%{search_query}%"))
+            listing = listing.filter(cls.name.ilike(f"%{search_query}%"))
 
-        return query.all()
+        return listing.all()
 
     @classmethod
     def get_listing_details(cls, listing_id):

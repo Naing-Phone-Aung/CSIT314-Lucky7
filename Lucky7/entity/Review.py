@@ -108,12 +108,15 @@ class Review(db.Model):
             return [], None
         reviews = Review.get_reviews_for_agent(agent_id, filter_by=filter_by)
         formatted_reviews = Review.format_reviews(reviews)
-        return formatted_reviews, {
+        
+        reviewlist = formatted_reviews, {
             'id': agent.id,
             'name': agent.name,
             'email': agent.email,
             'phone_number': agent.phone_number
         }
+
+        return reviewlist
     
     ########################### AgentController  ###########################
     @staticmethod
@@ -142,7 +145,7 @@ class Review(db.Model):
 
         reviews = query.all()
 
-        return [
+        reviewList = [
             {
                 'star_rating': review.star_rating,
                 'description': review.description,
@@ -151,3 +154,5 @@ class Review(db.Model):
             }
             for review in reviews
         ]
+
+        return reviewList
