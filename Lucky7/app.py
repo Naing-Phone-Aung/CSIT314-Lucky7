@@ -20,8 +20,8 @@ with app.app_context():
     db.create_all()
 
 # Import and register blueprints
-from boundary.CreateUserAcc import CreateUserAccount_app
-app.register_blueprint(CreateUserAccount_app)
+# from boundary.CreateUserAcc import CreateUserAccount_app
+# app.register_blueprint(CreateUserAccount_app)
 
 from boundary.UserLogin import UserLogin_app
 app.register_blueprint(UserLogin_app)

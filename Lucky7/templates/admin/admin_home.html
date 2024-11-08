@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Listings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
+</head>
+<body class="font-sora bg-dark h-[1000px] text-moon">
+    <!-- nav bar -->
+    {% include 'partials/admin_nav.html' %}
+
+    <main class="container w-10/12 mx-auto pt-20">
+        
+    <!-- breadcrumbs -->
+    <div class="my-4">
+        <ol class="flex items-center whitespace-nowrap">
+        <li class="inline-flex items-center">
+            <a
+            class="flex items-center text-sm text-azure hover:text-blue-600 focus:outline-none focus:text-blue-600 dark:text-neutral-500 dark:hover:text-blue-500 dark:focus:text-blue-500"
+            href="#"
+            >
+            Accounts
+            <svg
+                class="shrink-0 mx-2 size-4 text-azure dark:text-neutral-600"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <path d="m9 18 6-6-6-6"></path>
+            </svg>
+            </a>
+        </li>
+        </ol>
+    </div>
+
+        <!-- Search Bar -->
+        <section class="mt-8 mb-10">
+            <form method="GET" action="{{ url_for('admin_app.home_page') }}" class="grid grid-cols-4 items-center">
+                <div class="col-span-3 relative">
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Search Accounts"
+                        class="py-3 ps-10 pe-4 w-full border-gray-200 rounded-lg text-sm focus:border-azure focus:ring-azure dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400"
+                        value="{{ request.args.get('search', '') }}"
+                    />
+                    <button type="submit" class="absolute inset-y-0 start-0 flex items-center pointer-events-none z-20 ps-3.5">
+                        <svg class="w-5 h-5 text-gray-400 dark:text-white/60" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="M21 21l-4.3-4.3"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="col-span-1 flex justify-evenly gap-1">
+                    <button type="submit" class="py-2 bg-azure px-7 rounded-md text-milk">Search</button>
+                    <a href="{{ url_for('admin_app.home_page', filter=request.args.get('filter')) }}" class="py-2 bg-white border-2 border-azure px-7 rounded-md text-azure">Clear</a>
+                </div>
+            </form>
+        </section>
+
+        <!-- Filter Buttons -->
+        <section>
+            <div class="flex gap-3 mb-10">
+                <a href="{{ url_for('admin_app.home_page') }}" 
+                   class="px-4 py-2 rounded-md {% if not request.args.get('filter') %}bg-blue-600 text-white{% else %}bg-white text-blue-600 border border-blue-600{% endif %}">
+                    All
+                </a>
+                <a href="{{ url_for('admin_app.home_page', filter='admin') }}" 
+                   class="px-4 py-2 rounded-md {% if request.args.get('filter') == 'admin' %}bg-blue-600 text-white{% else %}bg-white text-blue-600 border border-blue-600{% endif %}">
+                    Admin
+                </a> 
+                <a href="{{ url_for('admin_app.home_page', filter='usedCarAgent') }}" 
+                   class="px-4 py-2 rounded-md {% if request.args.get('filter') == 'usedCarAgent' %}bg-blue-600 text-white{% else %}bg-white text-blue-600 border border-blue-600{% endif %}">
+                    Agent
+                </a>
+                <a href="{{ url_for('admin_app.home_page', filter='buyer') }}" 
+                   class="px-4 py-2 rounded-md {% if request.args.get('filter') == 'buyer' %}bg-blue-600 text-white{% else %}bg-white text-blue-600 border border-blue-600{% endif %}">
+                    Buyer
+                </a>
+                <a href="{{ url_for('admin_app.home_page', filter='seller') }}" 
+                   class="px-4 py-2 rounded-md {% if request.args.get('filter') == 'seller' %}bg-blue-600 text-white{% else %}bg-white text-blue-600 border border-blue-600{% endif %}">
+                    Seller
+                </a>               
+            </div>
+        </section>
+
+        <!-- Account Lists -->
+        <section>
+            <div class="grid grid-cols-2 gap-x-7 gap-y-2">
+                {% for account in accounts %}
+                    <div class="col-span-1 my-2 mx-2 p-6 shadow-sm hover:shadow-md border border-gray-200 rounded-lg">
+                        <div class="flex justify-between items-end">
+                            <div>
+                                <p class="text-moon text-sm">Name: {{ account.name }}</p>
+                                <p class="text-lava text-xs">Role: {{ account.profile | capitalize }}</p>
+                            </div>
+                            <div class="flex items-center">
+                                <a href="{{ url_for('admin_app.account_detail', account_id=account.id) }}" class="text-azure text-sm hover:underline">See Details</a>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ml-1 text-azure">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="text-center text-gray-600">No accounts found.</p>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+</body>
+</html>
