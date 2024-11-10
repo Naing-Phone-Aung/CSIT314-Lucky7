@@ -1,8 +1,11 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session, abort
-from controller.CarListingController import AgentCreateListing, AgentUpdateListing, AgentDeleteListing, AgentSearchListing, AgentViewListing
 from controller.AgentController import AgentController, AgentViewReview
-from flask import jsonify
-
+from controller.CarListingController import (AgentCreateListing,
+                                             AgentDeleteListing,
+                                             AgentSearchListing,
+                                             AgentUpdateListing,
+                                             AgentViewListing)
+from flask import (Blueprint, abort, flash, jsonify, redirect, render_template,
+                   request, session, url_for)
 
 usedCarAgent_app = Blueprint('usedCarAgent_app', __name__)
 
@@ -17,12 +20,12 @@ def home_page():
     agent_id = session.get('id')
     # Fetch listings created by the agent
     listings = controller.get_listings_by_agent(agent_id)
-    
+
     Agentcontroller = AgentController()
     agent_detail = Agentcontroller.get_agent_detail(session.get('id'))
 
     if agent_detail:
-        name = agent_detail.name 
+        name = agent_detail.name
     else:
         flash("Seller details not found.")
         return redirect(url_for('UserLogin_app.login_page'))
@@ -76,7 +79,7 @@ def create_listing():
     agent_detail = Agentcontroller.get_agent_detail(session.get('id'))
 
     if agent_detail:
-        name = agent_detail.name 
+        name = agent_detail.name
     else:
         flash("Seller details not found.")
         return redirect(url_for('UserLogin_app.login_page'))
@@ -87,7 +90,7 @@ def create_listing():
 def view_listing(listing_id):
     # Check if the user is logged in and has the required profile
     if 'profile' not in session or session['profile'] not in ['usedCarAgent', 'Admin']:
-        flash("You do not have permission to access this page.", "errror")
+        flash("You do not have permission to access this page.", "error")
         return redirect(url_for('UserLogin_app.login_page'))
 
     controller = AgentViewListing()
@@ -151,7 +154,7 @@ def search_listings():
             'price': listing.price,
             'image_url': listing.image_url,
             'previous_owners' : listing.previous_owners,
-            'created_at' : listing.created_at.strftime('%d-%m-%Y') 
+            'created_at' : listing.created_at.strftime('%d-%m-%Y')
         }
         for listing in listings
     ]
@@ -184,7 +187,7 @@ def view_reviews():
     agent_detail = Agentcontroller.get_agent_detail(session.get('id'))
 
     if agent_detail:
-        name = agent_detail.name 
+        name = agent_detail.name
     else:
         flash("Seller details not found.")
         return redirect(url_for('UserLogin_app.login_page'))
@@ -208,11 +211,11 @@ def view_profile():
     agent_detail = controller.get_agent_detail(session.get('id'))
 
     if agent_detail:
-        name = agent_detail.name  
+        name = agent_detail.name
     else:
         flash("Agent details not found.")
         return redirect(url_for('agent_app.home_page'))
-    
+
     return render_template('/usedCarAgent/agent_profile.html', agent_detail=agent_detail, name=name)
 
 @usedCarAgent_app.route('/usedCarAgent/delete_listing/<int:listing_id>', methods=['POST'])
@@ -223,7 +226,7 @@ def delete_listing(listing_id):
         return redirect(url_for('UserLogin_app.login_page'))
 
     controller = AgentDeleteListing()
-    
+
     # Call the `remove_listing` method from the entity layer
     success = controller.remove_listing(listing_id)
 

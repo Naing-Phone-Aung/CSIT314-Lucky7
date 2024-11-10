@@ -1,8 +1,10 @@
-from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
+
 from db import db
 from sqlalchemy import Enum
 from sqlalchemy.exc import SQLAlchemyError
+from werkzeug.security import check_password_hash, generate_password_hash
+
 
 # UserAccount model for MySQL
 class UserAccount(db.Model):
@@ -62,7 +64,7 @@ class UserAccount(db.Model):
         if user and user.verify_password(password):
             return True, user
         return False, None
-    
+
     @staticmethod
     def get_seller_details(seller_id):
         return db.session.query(UserAccount).filter(UserAccount.id == seller_id).first()
@@ -78,11 +80,16 @@ class UserAccount(db.Model):
         return db.session.query(UserAccount).filter_by(id=agent_id, profile='usedCarAgent').first()
 
     @staticmethod
+    def get_buyer_detail(buyer_id):
+        # Retrieve details for a specific agent by ID
+        return db.session.query(UserAccount).filter_by(id=buyer_id, profile='buyer').first()
+
+    @staticmethod
     def validate_seller_email(email):
         # Check if a seller exists by email and return the seller's ID
         seller = db.session.query(UserAccount).filter_by(email=email, profile='seller').first()
         return seller.id if seller else None
-    
+
     @staticmethod
     def get_all_accounts():
         # Retrieve all accounts with role details
@@ -96,21 +103,21 @@ class UserAccount(db.Model):
     @staticmethod
     def get_filtered_accounts(search_query='', profile_filter=''):
         query = db.session.query(UserAccount)
-        
+
         if search_query:
             query = query.filter(UserAccount.name.ilike(f"%{search_query}%"))
-        
+
         if profile_filter:
             query = query.filter(UserAccount.profile == profile_filter)
-        
+
         return query.all()
-    
+
     @staticmethod
     def get_account_by_id(account_id):
         account = UserAccount.query.get(account_id)
         if account:
             acc_detail = {
-                "id": account.id,  
+                "id": account.id,
                 "name": account.name,
                 "email": account.email,
                 "dob": account.dob,
@@ -126,12 +133,12 @@ class UserAccount(db.Model):
         user = UserAccount.query.get(account_id)
         if not user:
             return False, "User not found."
-        
+
         # Check if the email is already used by another user
         email_exists = UserAccount.query.filter(UserAccount.email == email, UserAccount.id != account_id).first()
         if email_exists:
             return False, "Email is already in use by another account."
-        
+
         # Check if the phone number is already used by another user
         phone_exists = UserAccount.query.filter(UserAccount.phone_number == phone_number, UserAccount.id != account_id).first()
         if phone_exists:
@@ -151,13 +158,13 @@ class UserAccount(db.Model):
         db.session.commit()
         return True, "Account updated successfully."
 
-    
+
 
     @staticmethod
     def delete_account(account_id):
         account = UserAccount.query.get(account_id)
         if not account:
-            return False, "Account not found."    
+            return False, "Account not found."
         try:
             db.session.delete(account)
             db.session.commit()
@@ -173,11 +180,11 @@ class UserAccount(db.Model):
         user = UserAccount.query.get(account_id)
         if not user:
             return False, "User not found."
-        
+
         # Check if passwords match
         if new_password != confirm_password:
             return False, "Passwords do not match."
-        
+
         # Set and save new password
         user.set_password(new_password)
         db.session.commit()

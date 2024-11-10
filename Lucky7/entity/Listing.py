@@ -1,8 +1,9 @@
-from db import db
 from datetime import datetime
-from sqlalchemy import Enum as SQLAlchemyEnum
+
 import requests
 from config import IMGUR_CLIENT_ID
+from db import db
+from sqlalchemy import Enum as SQLAlchemyEnum
 from sqlalchemy.orm import aliased
 
 
@@ -33,7 +34,9 @@ class Listing(db.Model):
     agent_id = db.Column(db.Integer, db.ForeignKey('user_account.id'), nullable=False)
     buyer_id = db.Column(db.Integer, db.ForeignKey('user_account.id'), nullable=True)  # Initially empty
 
-    def __init__(self, name, image_url, price, model, color, mileage, steering_type, steering_position,fuel_type, horsepower, previous_owners, description, seller_id, agent_id):
+    views = db.Column(db.Integer, default=0)
+
+    def __init__(self, name, image_url, price, model, color, mileage, steering_type, steering_position,fuel_type, horsepower, previous_owners, description, seller_id, agent_id, views=0):
         self.name = name
         self.image_url = image_url
         self.price = price
@@ -48,12 +51,14 @@ class Listing(db.Model):
         self.description = description
         self.seller_id = seller_id
         self.agent_id = agent_id
+        self.views = 0
 
 
     ########################### SellerController.py ###########################
     def get_seller_listings(seller_id):
-        from entity.UserAccount import UserAccount  # Local import to avoid circular dependency
-        
+        from entity.UserAccount import \
+            UserAccount  # Local import to avoid circular dependency
+
         # Perform a join to retrieve both listing and agent details
         return db.session.query(
             Listing.id,
@@ -69,7 +74,7 @@ class Listing(db.Model):
             UserAccount.name.label("agent_name")
         ).join(UserAccount, UserAccount.id == Listing.agent_id) \
         .filter(Listing.seller_id == seller_id).all()
-    
+
 
     ########################### CarListingController ###########################
     @staticmethod
@@ -166,7 +171,7 @@ class Listing(db.Model):
             for field, value in form_data.items():
                 setattr(listing, field, value)
             db.session.commit()
-    
+
     @classmethod
     def get_listings_by_agent(cls, agent_id, search_query=None):
         # Retrieve listings created by a specific agent with optional search filtering
@@ -190,6 +195,29 @@ class Listing(db.Model):
         return listing.all()
 
     @classmethod
+    def get_all_listings(cls, search_query=None):
+        # Retrieve listings created by a specific agent with optional search filtering
+        listing = db.session.query(
+            cls.id,
+            cls.name,
+            cls.mileage,
+            cls.price,
+            cls.image_url,
+            cls.created_at,
+            cls.previous_owners,
+            cls.status,
+            cls.views,
+            cls.seller_id,
+            cls.agent_id
+        )
+
+        # Apply search query if provided
+        if search_query:
+            listing = listing.filter(cls.name.ilike(f"%{search_query}%"))
+
+        return listing.all()
+
+    @classmethod
     def get_listing_details(cls, listing_id):
         # Query the Listing details along with seller and agent information
         from entity.UserAccount import UserAccount
@@ -204,13 +232,41 @@ class Listing(db.Model):
             cls.id == listing_id
         ).first()
         return listing
-    
+
     @classmethod
     def remove_listing(cls, listing_id):
         # Retrieve the listing to be deleted
         listing = cls.query.get(listing_id)
         if listing:
             db.session.delete(listing)
+            db.session.commit()
+            return True
+        return False
+
+    @classmethod
+    def get_favourite_listings(cls, buyer_id):
+        # Retrieve all listings marked as favourites for a specific buyer
+        listings = db.session.query(
+            cls.id,
+            cls.name,
+            cls.mileage,
+            cls.price,
+            cls.image_url,
+            cls.created_at,
+            cls.previous_owners,
+            cls.status,
+            cls.seller_id,
+            cls.agent_id
+        ).join(Favourites, Favourites.listing_id == cls.id).filter(Favourites.buyer_id == buyer_id)
+
+        return listings.all()
+
+    @classmethod
+    def increment_view_count(cls, listing_id):
+        """Finds a listing by ID and increments its view count."""
+        listing = cls.query.get(listing_id)
+        if listing:
+            listing.views = (listing.views or 0) + 1  # Ensure views is not None
             db.session.commit()
             return True
         return False

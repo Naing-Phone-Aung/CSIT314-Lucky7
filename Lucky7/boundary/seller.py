@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session, abort
-from controller.AgentListingController import SellerGiveReview, SellerViewReview
+from controller.AgentListingController import (SellerGiveReview,
+                                               SellerViewReview)
 from controller.SellerController import SellerController
-
+from flask import (Blueprint, abort, flash, redirect, render_template, request,
+                   session, url_for)
 
 seller_app = Blueprint('seller_app', __name__)
 GiveReview = SellerGiveReview()
@@ -12,7 +13,7 @@ ViewReview = SellerViewReview()
 def home_page():
     # Check if the user has the correct profile to access this page
     if 'profile' not in session or session['profile'] not in ['seller', 'Admin']:
-        flash("You do not have permission to access this page.")
+        flash("You do not have permission to access this page.", "error")
         return redirect(url_for('UserLogin_app.login_page'))
 
     agents = ViewReview.get_all_agents_with_reviews()
@@ -21,9 +22,9 @@ def home_page():
     seller = seller_controller.get_seller_details(session.get('id'))
 
     if seller:
-        name = seller.name 
+        name = seller.name
     else:
-        flash("Seller details not found.")
+        flash("Seller details not found.", "error")
         return redirect(url_for('UserLogin_app.login_page'))
 
     return render_template('/seller/seller_home.html', agents=agents, name=name)
@@ -41,9 +42,9 @@ def view_profile():
 
     # Check if seller details were retrieved successfully
     if seller_detail:
-        name = seller_detail.name 
+        name = seller_detail.name
     else:
-        flash("Seller details not found.")
+        flash("Seller details not found.", "error")
         return redirect(url_for('seller_app.home_page'))
 
     # Render profile page with seller details
@@ -53,7 +54,7 @@ def view_profile():
 @seller_app.route('/seller/view_agent/<int:agent_id>', methods=['GET', 'POST'])
 def view_agent(agent_id):
     if session.get('profile') not in ['seller', 'Admin']:
-        flash("You do not have permission to access this page.")
+        flash("You do not have permission to access this page.", "error")
         return redirect(url_for('UserLogin_app.login_page'))
 
     if request.method == 'POST':
@@ -61,7 +62,7 @@ def view_agent(agent_id):
         if session.get('profile') == 'seller':
             user_id = session.get('id')
             if user_id is None:
-                flash("User not logged in.")
+                flash("User not logged in.", "error")
                 return redirect(url_for('UserLogin_app.login_page'))
 
             star_rating = int(request.form.get('star_rating'))
@@ -72,7 +73,7 @@ def view_agent(agent_id):
             except ValueError as e:
                 flash(str(e))
         else:
-            flash("Only sellers can give reviews.")
+            flash("Only sellers can give reviews.", "error")
         return redirect(url_for('seller_app.view_agent', agent_id=agent_id))
 
     # Get filter type from request (default to 'all')
@@ -81,7 +82,7 @@ def view_agent(agent_id):
     reviews, agent = ViewReview.get_reviews_by_agent(agent_id, filter_by=filter_by)
 
     if agent is None:
-        flash("Agent not found.")
+        flash("Agent not found.", "error")
         return redirect(url_for('seller_app.home_page'))
 
     # Calculate the average star rating
@@ -102,7 +103,7 @@ def view_agent(agent_id):
 def view_my_listings():
     # Check if the user has the correct profile to access this page
     if 'profile' not in session or session['profile'] not in ['seller', 'Admin']:
-        flash("You do not have permission to access this page.")
+        flash("You do not have permission to access this page.", "error")
         return redirect(url_for('UserLogin_app.login_page'))
 
     # Get the listings for the seller
@@ -113,5 +114,3 @@ def view_my_listings():
 
     # Pass the listings to the template
     return render_template('/seller/seller_listings.html', listings=listings, name=name)
-
-
