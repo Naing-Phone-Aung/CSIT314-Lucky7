@@ -249,23 +249,6 @@ class Listing(db.Model):
             return True
         return False
 
-    @classmethod
-    def get_favourite_listings(cls, buyer_id):
-        # Retrieve all listings marked as favourites for a specific buyer
-        listings = db.session.query(
-            cls.id,
-            cls.name,
-            cls.mileage,
-            cls.price,
-            cls.image_url,
-            cls.created_at,
-            cls.previous_owners,
-            cls.status,
-            cls.seller_id,
-            cls.agent_id
-        ).join(Favourites, Favourites.listing_id == cls.id).filter(Favourites.buyer_id == buyer_id)
-
-        return listings.all()
 
     @classmethod
     def increment_view_count(cls, listing_id):

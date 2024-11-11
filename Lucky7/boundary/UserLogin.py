@@ -37,3 +37,7 @@ def login_page():
 
     # Render the login page template
     return render_template('Login.html')
+
+@UserLogin_app.route('/terms&conditions')
+def termsNconditions():
+    return render_template('terms&conditions.html')

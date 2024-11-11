@@ -12,10 +12,10 @@ class UserAccount(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
-    dob = db.Column(db.Date, nullable=False)
-    phone_number = db.Column(db.String(15), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=True)
+    password = db.Column(db.String(255), nullable=True)
+    dob = db.Column(db.Date, nullable=True)
+    phone_number = db.Column(db.String(15), unique=True, nullable=True)
     profile = db.Column(Enum('admin', 'seller', 'buyer', 'usedCarAgent', name='profile_type'), nullable=False)
 
     def __init__(self, name, email, password, dob, phone_number, profile='buyer'):
@@ -92,17 +92,30 @@ class UserAccount(db.Model):
 
     @staticmethod
     def get_all_accounts():
-        # Retrieve all accounts with role details
-        return db.session.query(UserAccount).all()
+        try:
+            # Retrieve all accounts except those with the name "Deleted_Account"
+            accounts = db.session.query(UserAccount).filter(UserAccount.name != "Deleted_Account").all()
+            return accounts
+        except SQLAlchemyError:
+            db.session.rollback()
+            return None, "An error occurred while retrieving accounts."
+
+    # @staticmethod
+    # def get_all_accounts():
+    #     # Retrieve all accounts with role details
+    #     return db.session.query(UserAccount).all()
 
     @staticmethod
     def get_admin_detail(admin_id):
     # Fetches profile information of a specific admin
         return db.session.query(UserAccount).filter_by(id=admin_id, profile='admin').first()
-
+    
     @staticmethod
     def get_filtered_accounts(search_query='', profile_filter=''):
         query = db.session.query(UserAccount)
+
+        # Exclude accounts with the name "Deleted_Account"
+        query = query.filter(UserAccount.name != "Deleted_Account")
 
         if search_query:
             query = query.filter(UserAccount.name.ilike(f"%{search_query}%"))
@@ -111,6 +124,19 @@ class UserAccount(db.Model):
             query = query.filter(UserAccount.profile == profile_filter)
 
         return query.all()
+
+
+    # @staticmethod
+    # def get_filtered_accounts(search_query='', profile_filter=''):
+    #     query = db.session.query(UserAccount)
+
+    #     if search_query:
+    #         query = query.filter(UserAccount.name.ilike(f"%{search_query}%"))
+
+    #     if profile_filter:
+    #         query = query.filter(UserAccount.profile == profile_filter)
+
+    #     return query.all()
 
     @staticmethod
     def get_account_by_id(account_id):
@@ -159,19 +185,36 @@ class UserAccount(db.Model):
         return True, "Account updated successfully."
 
 
-
     @staticmethod
     def delete_account(account_id):
         account = UserAccount.query.get(account_id)
         if not account:
             return False, "Account not found."
         try:
-            db.session.delete(account)
+            # Anonymize account data instead of deleting
+            account.name = "Deleted_Account"
+            account.email = None
+            account.phone_number = None
+            account.password = None
+            account.dob = None
             db.session.commit()
             return True, "Account deleted successfully."
         except SQLAlchemyError:
             db.session.rollback()
             return False, "An error occurred while deleting the account."
+
+    # @staticmethod
+    # def delete_account(account_id):
+    #     account = UserAccount.query.get(account_id)
+    #     if not account:
+    #         return False, "Account not found."
+    #     try:
+    #         db.session.delete(account)
+    #         db.session.commit()
+    #         return True, "Account deleted successfully."
+    #     except SQLAlchemyError:
+    #         db.session.rollback()
+    #         return False, "An error occurred while deleting the account."
 
 
     @staticmethod
