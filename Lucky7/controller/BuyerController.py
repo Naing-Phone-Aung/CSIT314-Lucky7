@@ -55,3 +55,13 @@ class BuyerViewIncrement:
     def increment_listing_view(self, listing_id):
             """Calls the entity layer to increment the view count for a listing."""
             return Listing.increment_view_count(listing_id)
+
+class fav_increment:
+    def increment_fav(self, listing_id):
+            """Calls the entity layer to increment the view count for a listing."""
+            return Listing.increment_fav_count(listing_id)
+
+class fav_decrement:
+    def decrement_fav(self, listing_id):
+            """Calls the entity layer to increment the view count for a listing."""
+            return Listing.decrement_fav_count(listing_id)

@@ -4,7 +4,8 @@ from controller.BuyerController import (BuyerAddFavourite, BuyerController,
                                         BuyerSearchListing, BuyerViewFavourite,
                                         BuyerViewIncrement, BuyerViewListing,
                                         BuyerViewListingAgent,
-                                        BuyerViewOneListing, BuyerViewReview)
+                                        BuyerViewOneListing, BuyerViewReview,
+                                        fav_decrement, fav_increment)
 from controller.SellerController import SellerController
 from flask import (Blueprint, abort, flash, jsonify, redirect, render_template,
                    request, session, url_for)
@@ -90,7 +91,7 @@ def search_listings():
             'price': listing.price,
             'image_url': listing.image_url,
             'previous_owners': listing.previous_owners,
-            'created_at': listing.created_at,
+            'created_at': listing.created_at.strftime('%d-%m-%Y'),  # Format to day-month-year
             'views': listing.views,
             'is_favourite': is_favourite
         })
@@ -144,12 +145,16 @@ def view_listing(listing_id):
             if is_favourite:
                 # Remove from favourites
                 if fav_remove.rem_from_fav(listing_id, user_id):
+                    fav_dec_controller = fav_decrement()
+                    fav_dec_controller.decrement_fav(listing_id)
                     flash("Removed from favourites successfully.", "success")
                 else:
                     flash("Failed to remove from favourites.", "error")
             else:
                 # Add to favourites
                 if fav_add.add_to_fav(listing_id, user_id):
+                    fav_inc_controller = fav_increment()
+                    fav_inc_controller.increment_fav(listing_id)
                     flash("Added to favourites successfully.", "success")
                 else:
                     flash("Failed to add to favourites.", "error")
@@ -254,12 +259,16 @@ def toggle_favourite(listing_id):
     if is_favourite:
         # Remove from favourites
         if fav_remove.rem_from_fav(listing_id, user_id):
+            fav_dec_controller = fav_decrement()
+            fav_dec_controller.decrement_fav(listing_id)
             flash("Removed from favourites successfully.", "success")
         else:
             flash("Failed to remove from favourites.", "error")
     else:
         # Add to favourites
         if fav_add.add_to_fav(listing_id, user_id):
+            fav_inc_controller = fav_increment()
+            fav_inc_controller.increment_fav(listing_id)
             flash("Added to favourites successfully.", "success")
         else:
             flash("Failed to add to favourites.", "error")
@@ -297,7 +306,7 @@ def fav_page():
             'price': listing.price,
             'image_url': listing.image_url,
             'previous_owners': listing.previous_owners,
-            'created_at': listing.created_at,
+            'created_at': listing.created_at,  # Format to day-month-year
             'views': listing.views,
             'is_favourite': is_favourite
         }

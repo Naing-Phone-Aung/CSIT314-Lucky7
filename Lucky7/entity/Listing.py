@@ -35,8 +35,9 @@ class Listing(db.Model):
     buyer_id = db.Column(db.Integer, db.ForeignKey('user_account.id'), nullable=True)  # Initially empty
 
     views = db.Column(db.Integer, default=0)
+    favs = db.Column(db.Integer, default=0)
 
-    def __init__(self, name, image_url, price, model, color, mileage, steering_type, steering_position,fuel_type, horsepower, previous_owners, description, seller_id, agent_id, views=0):
+    def __init__(self, name, image_url, price, model, color, mileage, steering_type, steering_position,fuel_type, horsepower, previous_owners, description, seller_id, agent_id, views=0, favs=0):
         self.name = name
         self.image_url = image_url
         self.price = price
@@ -52,6 +53,7 @@ class Listing(db.Model):
         self.seller_id = seller_id
         self.agent_id = agent_id
         self.views = 0
+        self.favs = 0
 
 
     ########################### SellerController.py ###########################
@@ -71,6 +73,8 @@ class Listing(db.Model):
             Listing.status,
             Listing.seller_id,
             Listing.agent_id,
+            Listing.views,
+            Listing.favs,
             UserAccount.name.label("agent_name")
         ).join(UserAccount, UserAccount.id == Listing.agent_id) \
         .filter(Listing.seller_id == seller_id).all()
@@ -185,7 +189,9 @@ class Listing(db.Model):
             cls.previous_owners,
             cls.status,
             cls.seller_id,
-            cls.agent_id
+            cls.agent_id,
+            cls.views,
+            cls.favs
         ).filter(cls.agent_id == agent_id)
 
         # Apply search query if provided
@@ -209,7 +215,7 @@ class Listing(db.Model):
             cls.views,
             cls.seller_id,
             cls.agent_id
-        )
+        ).filter(cls.status != 'sold')  # Exclude listings where status is 'sold'
 
         # Apply search query if provided
         if search_query:
@@ -270,3 +276,54 @@ class Listing(db.Model):
             db.session.commit()
             return True
         return False
+
+    @classmethod
+    def increment_fav_count(cls, listing_id):
+        """Finds a listing by ID and increments its fav count."""
+        listing = cls.query.get(listing_id)
+        if listing:
+            listing.favs = (listing.favs or 0) + 1  # Ensure favs is not None
+            db.session.commit()
+            return True
+        return False
+
+    @classmethod
+    def decrement_fav_count(cls, listing_id):
+        """Finds a listing by ID and decrements its fav count."""
+        listing = cls.query.get(listing_id)
+        if listing and listing.favs > 0:
+            listing.favs -= 1
+            db.session.commit()
+            return True
+        return False
+
+    @staticmethod
+    def mark_listing_as_sold(listing_id, buyer_email):
+        """Marks a listing as sold by updating the buyer_id based on the buyer's email."""
+        from entity.UserAccount import \
+            UserAccount  # Import to avoid circular dependency
+
+        try:
+            # Fetch the buyer's ID using the email
+            buyer = db.session.query(UserAccount).filter_by(email=buyer_email).first()
+            if not buyer:
+                return False, "Buyer with the provided email not found."
+
+            # Retrieve the listing by ID
+            listing = Listing.query.get(listing_id)
+            if not listing:
+                return False, "Listing with the provided ID not found."
+
+            if listing.status == 'sold':
+                return False, "Listing is already marked as sold."
+
+            # Update the listing's buyer_id and status
+            listing.buyer_id = buyer.id
+            listing.status = 'sold'
+
+            # Commit the changes to the database
+            db.session.commit()
+            return True, "Listing marked as sold successfully."
+        except Exception as e:
+            # Log the exception if needed
+            return False, str(e)

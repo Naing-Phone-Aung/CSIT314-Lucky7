@@ -1,4 +1,5 @@
-from controller.AgentController import AgentController, AgentViewReview
+from controller.AgentController import (AgentController, AgentViewReview,
+                                        MarkSold)
 from controller.CarListingController import (AgentCreateListing,
                                              AgentDeleteListing,
                                              AgentSearchListing,
@@ -154,7 +155,10 @@ def search_listings():
             'price': listing.price,
             'image_url': listing.image_url,
             'previous_owners' : listing.previous_owners,
-            'created_at' : listing.created_at.strftime('%d-%m-%Y')
+            'created_at' : listing.created_at.strftime('%d-%m-%Y'),
+            'status': listing.status,
+            'views': listing.views,
+            'favs': listing.favs,
         }
         for listing in listings
     ]
@@ -236,3 +240,31 @@ def delete_listing(listing_id):
         flash("Failed to delete listing. It may not exist.", "error")
 
     return redirect(url_for('usedCarAgent_app.home_page'))
+
+
+@usedCarAgent_app.route('/usedCarAgent/mark_sold/<int:listing_id>', methods=['POST'])
+def mark_listing_as_sold(listing_id):
+    # Check if the user is logged in and has the required profile
+    if 'profile' not in session or session['profile'] != 'usedCarAgent':
+        flash("You do not have permission to access this feature.", "error")
+        return redirect(url_for('UserLogin_app.login_page'))
+
+    # Get the buyer email from the form
+    buyer_email = request.form.get('status').strip()
+
+    # Basic data validation
+    if not buyer_email:
+        flash("Buyer email is required.", "error")
+        return redirect(url_for('buyer_app.view_listing', listing_id=listing_id))
+
+    # Call the controller method to validate and process the marking of the listing as sold
+    mark_sold_controller = MarkSold()
+    result, message = mark_sold_controller.mark_listing_sold(listing_id, buyer_email)
+
+    # Flash a message based on the outcome
+    if result:
+        flash("Listing marked as sold successfully.", "success")
+    else:
+        flash(message, "error")
+
+    return redirect(url_for('usedCarAgent_app.view_listing', listing_id=listing_id))

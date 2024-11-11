@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Seller Listings Page</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   </head>
   <style>
     ::selection
@@ -62,21 +63,48 @@
                 <img class="w-full object-cover" style="height: 10rem;" src="{{ listing.image_url }}" referrerpolicy="no-referrer" alt="{{ listing.name }} Image">
             </div>
             <div class="pt-4 md:p-5 text-sm">
+                <div class="flex justify-between items-center">
                 <div class="text-lg"> {{ listing.name }}</div>
+                <div class="flex justify-between items-center gap-6">
+                {% if listing.views %}
+                <div class="flex items-center gap-1">
+                    <i class="fas fa-eye text-gray-600"></i> <!-- Eye icon -->
+                    <span>{{ listing.views }}</span> <!-- View count -->
+                </div>
+                {% endif %}
+                {% if listing.favs %}
+                <div class="flex items-center gap-1">
+                    <i class="fas fa-heart text-red-500"></i>
+                    <span>{{ listing.favs }}</span> <!-- View count -->
+                </div>
+                {% endif %}
+                </div>
+              </div>
+              <div>
+                {% if listing.status=='sold' %}
+                <span class="bg-green-400 p-1 px-2 rounded-md">
+                {{ listing.status }}
+                </span>
+                {% else %}
+                <span class="bg-orange-400 p-1 px-2 rounded-md">
+                    {{ listing.status }}
+                </span>
+                {% endif %}
+              </div>
+
                 <div class="mt-2 mb-4">
                     <div class="mb-2"><span class="text-lava">Mileage:</span> <span class="text-moon">{{ listing.mileage }} km</span></div>
                     <div class="mb-2"><span class="text-lava">No. of Owners:</span> <span class="text-moon">{{ listing.previous_owners }}</span></div>
                     <div class="mb-2"><span class="text-lava">Posted At:</span> <span class="text-moon">{{ listing.created_at.strftime('%d-%m-%Y') }}</span></div>
                     <div class="mb-2"><span class="text-lava">Agent :</span> <span class="text-moon">{{ listing.agent_name }}</span></div>
-                    <div class="mb-2"><span class="text-lava">Status :</span> <span class="text-moon">{{ listing.status }}</span></div>
                 </div>
                 <hr />
                 <div class="flex justify-between items-center mt-2">
                     <p class="text-lg text-moon dark:text-white">S$ {{ listing.price }}</p>
 
                 </div>
-              </div>
             </div>
+          </div>
             {% endfor %}
             {% else %}
           <div class="text-center text-lg text-moon">No listings found</div>

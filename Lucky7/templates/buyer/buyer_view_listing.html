@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Car detail page</title>
+    <title>Car Details page</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
@@ -84,6 +84,13 @@
           <div class="col-span-6">
             <div class="flex items-center justify-between">
               <div class="text-3xl font-semibold">{{ listing.name }}</div>
+              <span class="flex justify-between items-center gap-2">
+              {% if listing.views %}
+                <div class="flex items-center gap-1">
+                    <i class="fas fa-eye text-gray-600"></i> <!-- Eye icon -->
+                    <span>{{ listing.views }}</span> <!-- View count -->
+                </div>
+              {% endif %}
               <form method="post" action="{{ url_for('buyer_app.view_listing', listing_id=listing.id) }}">
                 <button type="submit" id="favourite-button" class="flex items-center gap-2 p-2 border rounded hover:shadow-md transition-all">
                   {% if is_favourite %}
@@ -97,6 +104,7 @@
                   {% endif %}
                 </button>
               </form>
+              <span>
             </div>
             <div class="grid grid-cols-2">
               <div class="col-span-1 text-lava text-sm font-light">

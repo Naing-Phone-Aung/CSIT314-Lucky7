@@ -6,6 +6,7 @@
     <title>Agent Home Page</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   </head>
   <style>
     ::selection
@@ -456,7 +457,25 @@
                                   <img class="w-full object-cover" style="height: 10rem;" src="${listing.image_url}" referrerpolicy="no-referrer" alt="${listing.name} Image">
                               </div>
                               <div class="pt-4 md:p-5 text-sm">
+                                <div class="flex item-center justify-between">
                                   <div class="text-lg"> ${listing.name}</div>
+                                  <div class="flex item-center justify-between gap-4">
+                                  ${listing.views ? `<div class="flex items-center gap-1">
+                                      <i class="fas fa-eye text-gray-600"></i> <!-- Eye icon -->
+                                      <span>${ listing.views }</span> <!-- View count -->
+                                  </div>`:''}
+                                  ${listing.favs ? `<div class="flex items-center gap-1">
+                                      <i class="fas fa-heart text-red-500"></i>
+                                      <span>${ listing.favs }</span> <!-- View count -->
+                                  </div>`:''}
+                                  </div>
+                                </div>
+                                  <div>
+                                  ${listing.status == 'sold' ? '<span class="bg-green-400 p-1 px-2 rounded-md">' : '<span class="bg-orange-400 p-1 px-2 rounded-md">'}
+                                  ${listing.status}
+                                  </span>
+                                  </div>
+
                                   <div class="mt-2 mb-4">
                                       <div class="mb-2"><span class="text-lava">Mileage:</span> <span class="text-moon">${listing.mileage} km</span></div>
                                       <div class="mb-2"><span class="text-lava">No. of Owners:</span> <span class="text-moon">${listing.previous_owners}</span></div>

@@ -51,19 +51,22 @@ class Favourites(db.Model):
 
     @classmethod
     def get_favourite_listings_for_user(cls, buyer_id):
-        # Retrieve all listings marked as favourites for a specific buyer
-        favourite_listings = db.session.query(
-            Listing.id,
-            Listing.name,
-            Listing.mileage,
-            Listing.price,
-            Listing.image_url,
-            Listing.created_at,
-            Listing.previous_owners,
-            Listing.status,
-            Listing.views,
-            Listing.seller_id,
-            Listing.agent_id
-        ).select_from(cls).join(Listing, cls.listing_id == Listing.id).filter(cls.buyer_id == buyer_id)
+      # Retrieve all listings marked as favourites for a specific buyer, excluding those with status 'sold'
+      favourite_listings = db.session.query(
+        Listing.id,
+        Listing.name,
+        Listing.mileage,
+        Listing.price,
+        Listing.image_url,
+        Listing.created_at,
+        Listing.previous_owners,
+        Listing.status,
+        Listing.views,
+        Listing.seller_id,
+        Listing.agent_id
+      ).select_from(cls).join(Listing, cls.listing_id == Listing.id).filter(
+        cls.buyer_id == buyer_id,
+        Listing.status != 'sold'
+      )
 
-        return favourite_listings.all()
+      return favourite_listings.all()
