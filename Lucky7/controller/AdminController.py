@@ -37,9 +37,6 @@ class SearchAccount:
 
 
 class AdminController:
-    # @staticmethod
-    # def get_all_accounts():
-    #     return UserAccount.get_all_accounts()
 
     @staticmethod
     def get_profile_info(admin_id):

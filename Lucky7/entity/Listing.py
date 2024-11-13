@@ -62,7 +62,7 @@ class Listing(db.Model):
             UserAccount  # Local import to avoid circular dependency
 
         # Perform a join to retrieve both listing and agent details
-        return db.session.query(
+        seller_listing = db.session.query(
             Listing.id,
             Listing.name,
             Listing.mileage,
@@ -78,6 +78,8 @@ class Listing(db.Model):
             UserAccount.name.label("agent_name")
         ).join(UserAccount, UserAccount.id == Listing.agent_id) \
         .filter(Listing.seller_id == seller_id).all()
+    
+        return seller_listing
 
 
     ########################### CarListingController ###########################

@@ -100,10 +100,7 @@ class UserAccount(db.Model):
             db.session.rollback()
             return None, "An error occurred while retrieving accounts."
 
-    # @staticmethod
-    # def get_all_accounts():
-    #     # Retrieve all accounts with role details
-    #     return db.session.query(UserAccount).all()
+
 
     @staticmethod
     def get_admin_detail(admin_id):
@@ -126,17 +123,6 @@ class UserAccount(db.Model):
         return query.all()
 
 
-    # @staticmethod
-    # def get_filtered_accounts(search_query='', profile_filter=''):
-    #     query = db.session.query(UserAccount)
-
-    #     if search_query:
-    #         query = query.filter(UserAccount.name.ilike(f"%{search_query}%"))
-
-    #     if profile_filter:
-    #         query = query.filter(UserAccount.profile == profile_filter)
-
-    #     return query.all()
 
     @staticmethod
     def get_account_by_id(account_id):
@@ -202,19 +188,6 @@ class UserAccount(db.Model):
         except SQLAlchemyError:
             db.session.rollback()
             return False, "An error occurred while deleting the account."
-
-    # @staticmethod
-    # def delete_account(account_id):
-    #     account = UserAccount.query.get(account_id)
-    #     if not account:
-    #         return False, "Account not found."
-    #     try:
-    #         db.session.delete(account)
-    #         db.session.commit()
-    #         return True, "Account deleted successfully."
-    #     except SQLAlchemyError:
-    #         db.session.rollback()
-    #         return False, "An error occurred while deleting the account."
 
 
     @staticmethod
