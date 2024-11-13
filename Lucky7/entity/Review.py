@@ -71,6 +71,7 @@ class Review(db.Model):
             # Determine if the reviewer is a seller or buyer and get the name accordingly
             reviewer_id = review.seller_id if review.seller_id else review.buyer_id
             reviewer = db.session.get(UserAccount, reviewer_id)
+
             reviewer_name = reviewer.name if reviewer else "Unknown"
 
             formatted_reviews.append({

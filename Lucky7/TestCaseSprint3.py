@@ -97,7 +97,7 @@ class Sprint2Test(unittest.TestCase):
     def test_seller_view_listing_views(self):
         with app.app_context():
             # Re-fetch the listing directly from the database to ensure it’s associated with the session
-            listing = db.session.get(Listing, self.listing_id)
+            listing = db.session.get(Listing,self.listing_id)
 
             # Assert the views are set to 5 as expected
             self.assertEqual(listing.views, 5, f"Expected views to be 5, but got {listing.views}")
