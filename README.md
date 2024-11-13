@@ -40,8 +40,5 @@ agent
 
 ## note
 
-the image link for imgur only works if you put referrerpolicy="no-referrer" in the html tag, idk why juz put it lol
+the image link for imgur only works if you put referrerpolicy="no-referrer" in the html tag
 
-## TODO
-
-need to implement changing listing status to sold after implementing buyer
