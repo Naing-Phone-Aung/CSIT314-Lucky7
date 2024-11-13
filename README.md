@@ -26,11 +26,11 @@ flask db upgrade
 
 ## How to run Test Case (TDD file)
 
-python -m unittest TestCaseSprint1.py
-python -m unittest TestCaseSprint2.py
-python -m unittest TestCaseSprint3.py
-python -m unittest TestCaseSprint4.py
-python -m unittest TestCaseSprint5.py
+python -m unittest TestCaseSprint1.py < br / >
+python -m unittest TestCaseSprint2.py < br / >
+python -m unittest TestCaseSprint3.py < br / >
+python -m unittest TestCaseSprint4.py < br / >
+python -m unittest TestCaseSprint5.py < br / >
 
 ## Amazon Web Service for Cloud Database (MySQL)
 
