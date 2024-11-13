@@ -24,6 +24,23 @@ flask db migrate -m "Description of changes"
 
 flask db upgrade
 
+## How to run Test Case (TDD file)
+
+python -m unittest TestCaseSprint1.py
+python -m unittest TestCaseSprint2.py
+python -m unittest TestCaseSprint3.py
+python -m unittest TestCaseSprint4.py
+python -m unittest TestCaseSprint5.py
+
+## Amazon Web Service for Cloud Database (MySQL)
+
+Now paying subscription for AWS but later after 2024 might not continue subscription 
+
+## note
+
+the image link for imgur only works if you put referrerpolicy="no-referrer" in the html tag
+
+
 ## prod accounts
 
 admin@admin.com
@@ -38,11 +55,5 @@ buyer
 agent@agent.com
 agent
 
-## Amazon Web Service for Cloud Database (MySQL)
 
-Now paying subscription for AWS but later after 2024 might not continue subscription 
-
-## note
-
-the image link for imgur only works if you put referrerpolicy="no-referrer" in the html tag
 
