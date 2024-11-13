@@ -1,9 +1,7 @@
 from datetime import datetime
-
 from db import db
 from entity.Listing import Listing
 from sqlalchemy import and_
-
 
 class Favourites(db.Model):
     __tablename__ = 'favourites'

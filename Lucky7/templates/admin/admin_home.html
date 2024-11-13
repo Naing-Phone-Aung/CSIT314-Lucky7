@@ -76,10 +76,6 @@
                    class="px-4 py-2 rounded-md {% if not request.args.get('filter') %}bg-blue-600 text-white{% else %}bg-white text-blue-600 border border-blue-600{% endif %}">
                     All
                 </a>
-                <a href="{{ url_for('admin_app.home_page', filter='admin') }}" 
-                   class="px-4 py-2 rounded-md {% if request.args.get('filter') == 'admin' %}bg-blue-600 text-white{% else %}bg-white text-blue-600 border border-blue-600{% endif %}">
-                    Admin
-                </a> 
                 <a href="{{ url_for('admin_app.home_page', filter='usedCarAgent') }}" 
                    class="px-4 py-2 rounded-md {% if request.args.get('filter') == 'usedCarAgent' %}bg-blue-600 text-white{% else %}bg-white text-blue-600 border border-blue-600{% endif %}">
                     Agent

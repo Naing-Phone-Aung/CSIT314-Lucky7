@@ -112,7 +112,10 @@ class UserAccount(db.Model):
         query = db.session.query(UserAccount)
 
         # Exclude accounts with the name "Deleted_Account"
-        query = query.filter(UserAccount.name != "Deleted_Account")
+        query = query.filter(
+            (UserAccount.name != "Deleted_Account") &
+            (UserAccount.profile != "admin")
+        )
 
         if search_query:
             query = query.filter(UserAccount.name.ilike(f"%{search_query}%"))
