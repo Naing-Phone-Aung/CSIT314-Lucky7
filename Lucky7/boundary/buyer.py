@@ -183,6 +183,7 @@ def view_listing(listing_id):
 
     if result:
         listing, seller_name, seller_email, name = result
+        
         return render_template('/buyer/buyer_view_listing.html', listing=listing, seller_name=seller_name, seller_email=seller_email, name=name, agent=agent, reviews=reviews, average_rating=average_rating, is_favourite=is_favourite)
     else:
         abort(404)  # Show a 404 error if the listing is not found

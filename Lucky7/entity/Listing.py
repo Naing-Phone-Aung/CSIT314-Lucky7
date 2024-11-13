@@ -58,8 +58,7 @@ class Listing(db.Model):
 
     ########################### SellerController.py ###########################
     def get_seller_listings(seller_id):
-        from entity.UserAccount import \
-            UserAccount  # Local import to avoid circular dependency
+        from entity.UserAccount import UserAccount  
 
         # Perform a join to retrieve both listing and agent details
         seller_listing = db.session.query(
@@ -169,9 +168,11 @@ class Listing(db.Model):
         db.session.commit()
         return True, "Listing created successfully."
 
-    @staticmethod
-    def process_update(listing_id, form_data):
-        listing = Listing.query.get(listing_id)
+    #@staticmethod
+    @classmethod
+    def process_update(cls, listing_id, form_data):
+        #listing = Listing.query.get(listing_id)
+        listing = db.session.get(cls, listing_id)
         if listing:
             # Update listing fields
             for field, value in form_data.items():
@@ -244,7 +245,8 @@ class Listing(db.Model):
     @classmethod
     def remove_listing(cls, listing_id):
         # Retrieve the listing to be deleted
-        listing = cls.query.get(listing_id)
+        #listing = cls.query.get(listing_id)
+        listing = db.session.get(cls, listing_id)
         if listing:
             db.session.delete(listing)
             db.session.commit()
@@ -285,8 +287,7 @@ class Listing(db.Model):
     @staticmethod
     def mark_listing_as_sold(listing_id, buyer_email):
         """Marks a listing as sold by updating the buyer_id based on the buyer's email."""
-        from entity.UserAccount import \
-            UserAccount  # Import to avoid circular dependency
+        from entity.UserAccount import UserAccount 
 
         try:
             # Fetch the buyer's ID using the email
