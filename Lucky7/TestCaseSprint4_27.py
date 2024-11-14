@@ -91,33 +91,5 @@ class Sprint4Test(unittest.TestCase):
             listings = Listing.get_all_listings(search_query=search_query)
             self.assertTrue(any(listing.id == self.listing_id for listing in listings))
 
-    #28 Buyer View Car Info
-    def test_buyer_view_car_info(self):
-        with app.app_context():
-            listing_details = Listing.get_listing_details(self.listing_id)
-            self.assertIsNotNone(listing_details)
-            self.assertEqual(listing_details.Listing.id, self.listing_id)
-
-    #29 Buyer Save Car Info
-    def test_buyer_save_car_info(self):
-        with app.app_context():
-            result = Favourites.add_to_favourites(self.listing_id, self.buyer_id)
-            self.assertTrue(result)
-            favourite = Favourites.query.filter_by(listing_id=self.listing_id, buyer_id=self.buyer_id).first()
-            self.created_favourite_ids.append(favourite.id)
-            self.assertIsNotNone(favourite)
-
-    #30 Buyer View Saved Shortlist
-    def test_buyer_view_saved_shortlist(self):
-        with app.app_context():
-            # First, add to favourites
-            Favourites.add_to_favourites(self.listing_id, self.buyer_id)
-            favourite = Favourites.query.filter_by(listing_id=self.listing_id, buyer_id=self.buyer_id).first()
-            self.created_favourite_ids.append(favourite.id)
-
-            # Now, retrieve the saved shortlist
-            shortlist = Favourites.get_favourite_listings_for_user(self.buyer_id)
-            self.assertTrue(any(item.id == self.listing_id for item in shortlist))
-
 if __name__ == "__main__":
     unittest.main()
