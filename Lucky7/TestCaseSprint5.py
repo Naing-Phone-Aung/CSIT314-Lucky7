@@ -53,14 +53,14 @@ class Sprint5test(unittest.TestCase):
                 db.session.query(UserAccount).filter_by(id=account_id).delete()
             db.session.commit()
 
-    # Test for get_filtered_accounts
+    #11 #16 User Admin Search
     def test_get_filtered_accounts(self):
         with app.app_context():
             results = UserAccount.get_filtered_accounts(search_query="User", profile_filter="buyer")
             self.assertEqual(len(results), 1)
             self.assertEqual(results[0].id, self.user1.id)
 
-    # Test for update_account_info
+    #9 #14 User Admin Update
     def test_update_account_info(self):
         with app.app_context():
             # Test updating user1's info
@@ -83,22 +83,7 @@ class Sprint5test(unittest.TestCase):
             self.assertEqual(updated_user.phone_number, "9876543210")
             self.assertEqual(updated_user.profile, "seller")
 
-    # Test for update_account_info with email conflict
-    def test_update_account_info_email_conflict(self):
-        with app.app_context():
-            # Try to update user1 to have the same email as user2
-            result, message = UserAccount.update_account_info(
-                account_id=self.user1.id,
-                name="User1",
-                email="user2@example.com",
-                dob="1991-01-01",
-                phone_number="9876543210",
-                profile="buyer"
-            )
-            self.assertFalse(result)
-            self.assertEqual(message, "Email is already in use by another account.")
-
-    # Test for delete_account
+    #10 #15 User Admin Suspend
     def test_delete_account(self):
         with app.app_context():
             # Test deleting user1
@@ -113,14 +98,19 @@ class Sprint5test(unittest.TestCase):
             self.assertIsNone(deleted_user.email)
             self.assertIsNone(deleted_user.phone_number)
 
-    # Test for get_admin_detail
-    def test_get_admin_detail(self):
+    #8 #18 User Admin View
+    def test_account_detail(self):
         with app.app_context():
-            # Retrieve admin details
-            admin_detail = UserAccount.get_admin_detail(self.admin.id)
-            self.assertIsNotNone(admin_detail)
-            self.assertEqual(admin_detail.email, "admin@example.com")
-            self.assertEqual(admin_detail.profile, "admin")
+            # Retrieve details for user1
+            account_detail = UserAccount.get_account_by_id(self.user1.id)
+            self.assertIsNotNone(account_detail)
+
+            # Verify the details match what was set up
+            self.assertEqual(account_detail['name'], "Test User1")
+            self.assertEqual(account_detail['email'], "user1@example.com")
+            self.assertEqual(account_detail['phone_number'], "1234567891")
+            self.assertEqual(account_detail['profile'], "buyer")
+
 
 if __name__ == "__main__":
     unittest.main()

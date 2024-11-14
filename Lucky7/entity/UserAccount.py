@@ -129,7 +129,7 @@ class UserAccount(db.Model):
 
     @staticmethod
     def get_account_by_id(account_id):
-        account = UserAccount.query.get(account_id)
+        account = db.session.get(UserAccount, account_id)
         if account:
             acc_detail = {
                 "id": account.id,

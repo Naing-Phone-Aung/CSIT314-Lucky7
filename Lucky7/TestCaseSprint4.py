@@ -1,5 +1,4 @@
 import unittest
-
 from app import app
 from db import db
 from entity.Favourites import Favourites
@@ -90,7 +89,7 @@ class Sprint4Test(unittest.TestCase):
 
             db.session.commit()
 
-    # Tests for Sprint 2 functionalities
+    
     def test_get_all_listings(self):
         with app.app_context():
             listings = Listing.get_all_listings()
