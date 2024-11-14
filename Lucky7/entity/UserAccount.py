@@ -106,7 +106,7 @@ class UserAccount(db.Model):
     def get_admin_detail(admin_id):
     # Fetches profile information of a specific admin
         return db.session.query(UserAccount).filter_by(id=admin_id, profile='admin').first()
-    
+
     @staticmethod
     def get_filtered_accounts(search_query='', profile_filter=''):
         query = db.session.query(UserAccount)
@@ -145,7 +145,7 @@ class UserAccount(db.Model):
 
     @staticmethod
     def update_account_info(account_id, name, email, dob, phone_number, profile):
-        user = UserAccount.query.get(account_id)
+        user= db.session.get(UserAccount, account_id)
         if not user:
             return False, "User not found."
 
@@ -176,7 +176,7 @@ class UserAccount(db.Model):
 
     @staticmethod
     def delete_account(account_id):
-        account = UserAccount.query.get(account_id)
+        account = db.session.get(UserAccount, account_id)
         if not account:
             return False, "Account not found."
         try:
