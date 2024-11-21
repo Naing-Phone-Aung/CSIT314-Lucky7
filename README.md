@@ -34,7 +34,8 @@ node TestCaseSprint4_loanCal.js <br />
 
 ## Amazon Web Service for Cloud Database (MySQL)
 
-Now paying subscription for AWS but later after 2024 might not continue subscription 
+Now paying subscription for AWS but later after 2024 might not continue subscription
+(22/ 11/ 2024 we stopped our subscriptions) Thx
 
 ## note
 
