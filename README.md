@@ -2,6 +2,10 @@
 
 Selling and Buying of Used Car System
 
+# Project Design on Figma
+
+https://www.figma.com/design/BFH6pKrZaRMAmlVl0a9QZA/Lucky7?node-id=0-1&t=rJbnhXHbDfu0poCz-1
+
 ## First install the requirements for python by
 
 pip install -r requirement.txt
